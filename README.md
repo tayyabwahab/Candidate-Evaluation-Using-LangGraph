@@ -1,4 +1,4 @@
-# Recruitment Agency using LangGraph
+# Candidate-Evaluation-Using-LangGraph
 
 An intelligent recruitment system that automates candidate evaluation using LangGraph workflows and AI-powered assessment. This project demonstrates how to build a sophisticated recruitment pipeline that categorizes candidates, evaluates their skills, and routes them through different evaluation stages based on their qualifications.
 
