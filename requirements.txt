@@ -1,9 +1,7 @@
 # Recruitment Agency using LangGraph - Requirements
 # Core LangGraph and LangChain dependencies
 langgraph>=0.2.0
-langchain>=0.2.0
 langchain-core>=0.2.0
-langchain-community>=0.2.0
 langchain-ollama>=0.1.0
 
 # LLM and AI dependencies
@@ -13,5 +11,9 @@ ollama>=0.1.0
 matplotlib>=3.7.0
 pillow>=10.0.0
 
+# PDF processing
+PyPDF2>=3.0.0
+
 # Core Python dependencies
 typing-extensions>=4.8.0
+

@@ -3,8 +3,10 @@ from langchain_core.prompts import ChatPromptTemplate
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import io
+import sys
+import PyPDF2
 from evaluation import *
-from data import data_pdf
+
 
 def add_nodes(graph: RecruiterAgent) -> RecruiterAgent:
     """
@@ -134,7 +136,7 @@ def display_Summary(summary) -> None:
     print(f"Experience: {summary['level_experience']}")
     print(f"Outcome: {summary['outcome']}")
 
-def get_details(detail):
+def summarize_detalis(detail):
     """
     Extract and summarize candidate details using LLM.
     
@@ -162,6 +164,37 @@ def get_details(detail):
     # Invoke the chain with the detail variable
     summary = chain.invoke({"detail": detail["candidate_details"]})
     return summary
+
+
+
+# def extract_text_from_pdf(pdf_path):
+#     text = ""
+#     try:
+#         with open(pdf_path, "rb") as file:
+#             reader = PyPDF2.PdfReader(file)
+#             for page_num in range(len(reader.pages)):
+#                 page = reader.pages[page_num]
+#                 text += page.extract_text() + "\n"
+#     except Exception as e:
+#         print(f"Error reading PDF: {e}")
+#     return text
+
+def get_data_from_resume(path_resume):
+    
+    # pdf_file = "/home/tayyab/Downloads/Resume/NLP/Resume.pdf"
+    details = ""
+    try:
+        with open(path_resume, "rb") as file:
+            reader = PyPDF2.PdfReader(file)
+            for page_num in range(len(reader.pages)):
+                page = reader.pages[page_num]
+                details += page.extract_text() + "\n"
+    except Exception as e:
+        print(f"Error reading PDF: {e}")
+    # extracted_text = extract_text_from_pdf(pdf_file)
+    summarized = summarize_detalis({"candidate_details": details})
+    return summarized
+
 
 if __name__ == "__main__":
     """
@@ -192,11 +225,11 @@ if __name__ == "__main__":
     print("Testing the graph with sample data:")
     print("="*50)
 
-    candidate_details = {"candidate_details": data_pdf()}
-    get_details(candidate_details)
+    resume_path = "Resume.pdf"
+    candidate_details = get_data_from_resume(resume_path)
     
     #candidate_details = {"candidate_details": "3 years of experience in machine learning and 6 years of experience in deep learning",}
-    result = evaluate_candidate.invoke(candidate_details)
+    result = evaluate_candidate.invoke({"candidate_details": candidate_details})
     display_Summary(result)
         
 
