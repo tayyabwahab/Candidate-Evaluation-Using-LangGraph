@@ -17,8 +17,7 @@ The project follows a modular architecture with three main components:
 
 ```
 main.py          ← Main entry point and graph orchestration
-├── evaluation.py ← AI-powered evaluation functions
-└── data.py      ← Data extraction and processing
+└── evaluation.py ← AI-powered evaluation functions
 ```
 
 ### Workflow Structure
