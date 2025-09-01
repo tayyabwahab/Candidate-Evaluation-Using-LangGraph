@@ -97,8 +97,8 @@ START → Categorize Candidate Experience → Evaluate Candidate Skills → [Con
    ```
 
 2. **The system will:**
-   - Create and visualize the recruitment workflow graph
-   - Process candidate data from `data.py`
+   - Create and visualize the evaluation workflow graph
+   - Process candidate data from the provided resume
    - Run the candidate through the evaluation pipeline
    - Display the final evaluation results
 
