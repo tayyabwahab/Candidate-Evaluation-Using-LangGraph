@@ -69,7 +69,6 @@ START → Categorize Candidate Experience → Evaluate Candidate Skills → [Con
    git clone https://github.com/tayyabwahab/Candidate-Evaluation-Using-LangGraph.git
    cd "Candidate-Evaluation-Using-LangGraph"
    ```
-
 2. **Install Ollama on host machine**
    ```bash
    curl -fsSL https://ollama.ai/install.sh | sh
@@ -78,7 +77,15 @@ START → Categorize Candidate Experience → Evaluate Candidate Skills → [Con
    ollama pull mistral
    ```
 
+3. **Download and run the Docker Image**
+   ```bash
+   docker pull tayyabwahab/cand_eval
+   docker run cand_eval
+   ```
+
 3. **Build and run Docker container**
+   You can bulid docker image locally using Dockerfile
+   
    ```bash
    # Build the image
    docker build -t cand_eval .
