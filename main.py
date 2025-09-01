@@ -191,6 +191,7 @@ def get_data_from_resume(path_resume):
                 details += page.extract_text() + "\n"
     except Exception as e:
         print(f"Error reading PDF: {e}")
+        exit(1)
     # extracted_text = extract_text_from_pdf(pdf_file)
     summarized = summarize_detalis({"candidate_details": details})
     return summarized
@@ -225,7 +226,8 @@ if __name__ == "__main__":
     print("Testing the graph with sample data:")
     print("="*50)
 
-    resume_path = "Resume.pdf"
+
+    resume_path = "./resume/Resume.pdf"
     candidate_details = get_data_from_resume(resume_path)
     
     #candidate_details = {"candidate_details": "3 years of experience in machine learning and 6 years of experience in deep learning",}

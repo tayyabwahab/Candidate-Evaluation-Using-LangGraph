@@ -11,8 +11,85 @@ class RecruiterAgent(TypedDict):
     resume: str
     outcome: str
 
+# Global variable to cache the working Ollama configuration
+ollama_config = None
+
 def GetLLM(model = "mistral"):
-    return OllamaLLM(model=model)
+    """
+    Get LLM instance with cached configuration for Docker compatibility.
+    
+    This function caches the working Ollama configuration after the first successful
+    connection, so subsequent calls reuse the same configuration without retrying.
+    
+    Args:
+        model (str): The Ollama model name to use
+        
+    Returns:
+        OllamaLLM: Configured LLM instance
+        
+    Raises:
+        Exception: If Ollama service is not accessible from any configuration
+    """
+    global ollama_config
+    import os
+    
+    # If we already found a working configuration, reuse it
+    if ollama_config is not None:
+        try:
+            llm = OllamaLLM(model=model, base_url=ollama_config)
+            # Quick test to ensure connection still works
+            llm.invoke("test")
+            return llm
+        except Exception as e:
+            print(f"⚠️ Cached configuration failed, retrying all configurations...")
+            ollama_config = None  # Reset cache and try again
+    
+    # Try different Ollama host configurations (only on first call or cache failure)
+    ollama_hosts = [
+        "http://localhost:11434",  # Local host
+        "http://host.docker.internal:11434",  # Docker Desktop
+        "http://172.17.0.1:11434",  # Docker bridge network
+        "http://ollama:11434",  # Docker Compose service name
+    ]
+    
+    # Use environment variable if set
+    if os.getenv("OLLAMA_HOST"):
+        ollama_hosts.insert(0, os.getenv("OLLAMA_HOST"))
+    
+    for host in ollama_hosts:
+        try:
+            print(f"🔄 Trying to connect to Ollama at: {host}")
+            llm = OllamaLLM(model=model, base_url=host)
+            # Test connection with a simple query
+            test_response = llm.invoke("test")
+            print(f"✅ Successfully connected to Ollama at: {host}")
+            
+            # Cache the working configuration
+            ollama_config = host
+            #print(f"💾 Cached working configuration: {host}")
+            
+            return llm
+        except Exception as e:
+            print(f"❌ Failed to connect to {host}: {str(e)[:100]}...")
+            continue
+    
+    # If all connections failed
+    print("❌ Could not connect to Ollama from any configuration")
+    print("💡 Make sure Ollama is running: ollama serve")
+    print("💡 Try running Docker with: --network=host")
+    print("💡 Or set OLLAMA_HOST environment variable")
+    raise Exception("Ollama service not accessible. Please check Ollama is running and Docker network configuration.")
+
+def reset_ollama_config():
+    """
+    Reset the cached Ollama configuration.
+    
+    Use this function if you need to force a reconnection to Ollama
+    or if the connection has changed.
+    """
+    global ollama_config
+    ollama_config = None
+    print("🔄 Ollama configuration cache reset")
 
 def CategorizeCandidateExperience(graph: RecruiterAgent) -> RecruiterAgent:
     """
