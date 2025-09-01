@@ -10,14 +10,20 @@ An intelligent recruitment system that automates candidate evaluation using Lang
 - **Skills Assessment**: Evaluates candidate suitability for Machine Learning Engineer positions
 - **Conditional Decision Making**: Smart routing to interviews, recruiter review, or rejection
 - **Modular Architecture**: Clean separation of concerns with dedicated modules for different functionalities
+- **Docker Support**: Complete containerization with optimized Ollama integration
+- **Smart Caching**: Efficient Ollama configuration caching for improved performance
+- **PDF Processing**: Automated resume text extraction and processing
+- **Robust Error Handling**: Comprehensive error handling and fallback mechanisms
 
 ## 🏗️ Architecture
 
-The project follows a modular architecture with three main components:
+The project follows a modular architecture with four main components:
 
 ```
 main.py          ← Main entry point and graph orchestration
-└── evaluation.py ← AI-powered evaluation functions
+├── evaluation.py ← AI-powered evaluation functions with smart caching
+├── data.py      ← PDF extraction and data processing
+└── Dockerfile   ← Container configuration
 ```
 
 ### Workflow Structure
@@ -28,7 +34,6 @@ START → Categorize Candidate Experience → Evaluate Candidate Skills → [Con
                                                                     ├─ To Recruiter → Evaluate By Recruiter → END
                                                                     └─ Rejected → Reject Candidate → END
 ```
-
 
 ## 🛠️ Installation
 
@@ -42,15 +47,49 @@ START → Categorize Candidate Experience → Evaluate Candidate Skills → [Con
    pip install -r requirements.txt
    ```
 
-3. **Download required models**
+3. **Install and start Ollama**
+   ```bash
+   # Install Ollama (follow instructions at https://ollama.ai)
+   curl -fsSL https://ollama.ai/install.sh | sh
+   
+   # Start Ollama service
+   ollama serve
+   ```
+
+4. **Download required models**
    ```bash
    ollama pull gemma3:12b
    ollama pull mistral
    ```
 
+### Option 2: Docker Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/tayyabwahab/Candidate-Evaluation-Using-LangGraph.git
+   cd "Candidate-Evaluation-Using-LangGraph"
+   ```
+
+2. **Install Ollama on host machine**
+   ```bash
+   curl -fsSL https://ollama.ai/install.sh | sh
+   ollama serve
+   ollama pull gemma3:12b
+   ollama pull mistral
+   ```
+
+3. **Build and run Docker container**
+   ```bash
+   # Build the image
+   docker build -t cand_eval .
+   
+   # Run the container
+   docker run cand_eval
+   ```
+
 ## 🚀 Usage
 
-### Basic Usage
+### Local Usage
 
 1. **Run the main application**
    ```bash
@@ -91,14 +130,13 @@ Modify the prompt templates in `evaluation.py` to adjust:
 ## 📊 Evaluation Criteria
 
 ### Experience Levels
-Current setting works with the following details that can be changed according to requirements:
 - **Entry Level**: 0-2 years of experience
 - **Mid Level**: 2-5 years of experience
 - **Senior**: 5+ years of experience
 
 
 ### Skills Assessment
-- Evaluates suitability for Machine Learning Engineer position 
+- Evaluates suitability for Machine Learning Engineer position
 - Considers technical skills, experience relevance, and background
 - Provides binary yes/no decision
 
@@ -108,13 +146,7 @@ Current setting works with the following details that can be changed according t
 - **Other combinations**: → Rejection
 
 
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- **LangGraph** for the workflow orchestration framework
-- **LangChain** for the LLM integration capabilities
-- **Ollama** for providing local LLM capabilities
-- **Matplotlib** for graph visualization
